@@ -3,7 +3,7 @@
 Game::Game() {
     window.load();
 
-    battlefield.load();
+    battlefield.load(window.getPointer());
 
     window.loadUi();
 }
@@ -23,6 +23,10 @@ void Game::terminate() {
 }
 
 void Game::update() {
+    float currentFrame = glfwGetTime();
+    deltaTime = currentFrame - lastFrame;
+    lastFrame = currentFrame;
+
     if(window.shouldClose()){
         gameRunning = false;
     }
@@ -31,7 +35,7 @@ void Game::update() {
 
     window.getInputs();
 
-    battlefield.update(window.getPointer());
+    battlefield.update(window.getPointer(), deltaTime);
 }
 
 

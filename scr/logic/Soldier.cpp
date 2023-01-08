@@ -2,9 +2,11 @@
 #include <random>
 
 
-Soldier::Soldier(float x, float y, float z) {
+Soldier::Soldier(int debug, float x, float y, float z) {
+    debugId = debug;
+
     transform.setPosition(x,y,z);
-    target = transform.getPosition();
+    target = glm::vec3(0,0,0);
 
     glm::vec3 maxInit = glm::vec3(transform.getMoveMatrix() * glm::vec4(1));
     glm::vec3 minInit = glm::vec3(transform.getMoveMatrix() * glm::vec4(-1,-1,-1,1));
@@ -23,7 +25,7 @@ CollisionBox & Soldier::getCollider() {
     return collisionBox;
 }
 
-int Soldier::getUnitPlaceHold() const {
+[[maybe_unused]] int Soldier::getUnitPlaceHold() const {
     return unitPlaceHold;
 }
 
@@ -33,7 +35,7 @@ void Soldier::setColor(glm::vec4 color) {
 
 void Soldier::setTarget(glm::vec3 target, int formationPos, int formationDim) {
     typedef std::mt19937 rng_type;
-    std::uniform_int_distribution<rng_type::result_type> udist(0, 10);
+    std::uniform_int_distribution<rng_type::result_type> udist(0, unitPlaceHold);
 
     rng_type rng;
 
@@ -54,15 +56,19 @@ void Soldier::setTarget(glm::vec3 target, int formationPos, int formationDim) {
     this->target = target;
 }
 
-void Soldier::moveTowarsTarget() {
+void Soldier::moveTowarsTarget(float dt) {
     glm::vec3 vectorToTarget = target - transform.getPosition();
-    transform.setPosition(transform.getPosition() + vectorToTarget * speed);
+    float distance = glm::distance(target,transform.getPosition());
+    distance == 0? distance = 0.00001 : distance = distance;
+    vectorToTarget = vectorToTarget / distance;
+    transform.setPosition(transform.getPosition() + vectorToTarget * (speed * dt));
 
     glm::vec3 maxInit = glm::vec3(transform.getMoveMatrix() * glm::vec4(1));
     glm::vec3 minInit = glm::vec3(transform.getMoveMatrix() * glm::vec4(-1,-1,-1,1));
     collisionBox.setBounds(maxInit,minInit);
 }
 
-void Soldier::update() {
-    moveTowarsTarget();
+void Soldier::update(float dt) {
+    if (target == glm::vec3(0,0,0)){return;}
+    moveTowarsTarget(dt);
 }

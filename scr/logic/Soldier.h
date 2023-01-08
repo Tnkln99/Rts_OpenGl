@@ -5,7 +5,7 @@
 #include "components/CollisionBox.h"
 class Soldier {
 private:
-    float speed = 0.0005;
+    float speed = 50;
 
     Transformable transform;
     CollisionBox collisionBox;
@@ -16,19 +16,22 @@ private:
     const int unitPlaceHold = 2;
     const int unitRankSpacing = unitPlaceHold * 3;
 public:
-    Soldier(float x, float y, float z);
+    int debugId;
+
+    Soldier(int debug, float x, float y, float z);
 
     const Transformable & getTransformable();
     CollisionBox & getCollider();
     const glm::vec4 & getColor();
-    [[nodiscard]] int getUnitPlaceHold() const;
+
+    [[maybe_unused]] [[nodiscard]] int getUnitPlaceHold() const;
 
     void setColor(glm::vec4 color);
     void setTarget(glm::vec3 target, int formationPos, int formationDim);
 
-    void moveTowarsTarget();
+    void moveTowarsTarget(float dt);
 
-    void update();
+    void update(float dt);
 };
 
 
