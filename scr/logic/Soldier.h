@@ -5,33 +5,28 @@
 #include "components/CollisionBox.h"
 class Soldier {
 private:
-    float speed = 50;
-
-    Transformable transform;
+    float speed = 20;
+    glm::vec4 color;
+protected:
     CollisionBox collisionBox;
-    glm::vec4 color = glm::vec4(1);
-
-    glm::vec3 target;
 
     const int unitPlaceHold = 2;
     const int unitRankSpacing = unitPlaceHold * 3;
-public:
-    int debugId;
 
-    Soldier(int debug, float x, float y, float z);
+    Transformable transform;
+public:
+    Soldier( float x, float y, float z);
 
     const Transformable & getTransformable();
     CollisionBox & getCollider();
     const glm::vec4 & getColor();
+    [[nodiscard]] float getSpeed() const;
 
     [[maybe_unused]] [[nodiscard]] int getUnitPlaceHold() const;
 
     void setColor(glm::vec4 color);
-    void setTarget(glm::vec3 target, int formationPos, int formationDim);
 
-    void moveTowarsTarget(float dt);
-
-    void update(float dt);
+    virtual void update(float dt) = 0;
 };
 
 

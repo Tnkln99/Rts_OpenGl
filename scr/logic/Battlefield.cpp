@@ -1,11 +1,17 @@
 #include "Battlefield.h"
 #include "../Utils/CameraUtils.h"
-#include "../Utils/Const.h"
 
 
 void Battlefield::load(GLFWwindow *window) {
-    for(int i = 0; i < 20;i++){
-        soldiers.emplace_back(new Soldier(i, 0,0,0));
+    int offset = 20;
+    for(int i = 0; i < 10;i++){
+        playerSoldiers.emplace_back(new PlayerSoldier(-60, offset, 0));
+        offset -= 4;
+    }
+    offset = 20;
+    for(int i = 0; i < 10;i++){
+        enemySoldiers.emplace_back(new EnemySoldier(60, offset, 0));
+        offset -= 4;
     }
 
     glfwSetWindowUserPointer( window, this );
@@ -18,19 +24,26 @@ void Battlefield::load(GLFWwindow *window) {
 }
 
 Battlefield::~Battlefield() {
-    for(auto & soldier : soldiers){
+    for(auto & soldier : playerSoldiers){
         delete soldier;
     }
 }
 
-const std::vector<Soldier*> &Battlefield::getSoldiers() {
-    return soldiers;
+const std::vector<PlayerSoldier*> &Battlefield::getPlayerSoldiers() {
+    return playerSoldiers;
+}
+
+const std::vector<EnemySoldier *> &Battlefield::getEnemySoldiers() {
+    return enemySoldiers;
 }
 
 void Battlefield::update(GLFWwindow * window, float dt) {
-    for(auto & soldier : soldiers){
+    for(auto & soldier : playerSoldiers){
         soldier->update(dt);
     }
+    //for(auto & soldier : enemySoldiers){
+    //    soldier->update(dt);
+    //}
 }
 
 void Battlefield::mouseCallBack(GLFWwindow* window, int button, int action, int mods ) {
@@ -58,6 +71,10 @@ void Battlefield::mouseCallBack(GLFWwindow* window, int button, int action, int 
     }
     if(button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE){
         releasePosL = CameraUtils::ScreenToWorldMousePos(window,rayDir);
+        for (auto & selectedSoldier : selectedSoldiers) {
+            selectedSoldier->setColor(glm::vec4(1));
+        }
+        selectedSoldiers.clear();
     }
 
     glm::vec3 releasePosR = pressedPosR;
@@ -72,11 +89,14 @@ void Battlefield::mouseCallBack(GLFWwindow* window, int button, int action, int 
         releasePosR = CameraUtils::ScreenToWorldMousePos(window,rayDir);
     }
 
-    for (auto & soldier : soldiers){
+    for (auto & soldier : playerSoldiers){
         auto soldierPos = soldier->getTransformable().getPosition();
         if(pressedPosL.x < soldierPos.x && pressedPosL.y > soldierPos.y && releasePosL.x > soldierPos.x && releasePosL.y < soldierPos.y){
-            selectedSoldiers.emplace_back(soldier);
-            soldier->setColor(glm::vec4(0));
+            auto it = find(selectedSoldiers.begin(), selectedSoldiers.end(), soldier);
+            if (it == selectedSoldiers.end()) {
+                selectedSoldiers.emplace_back(soldier);
+                soldier->setColor(glm::vec4(0));
+            }
         }
 
         if(pressedPosR.x < soldierPos.x && pressedPosR.y > soldierPos.y && releasePosR.x > soldierPos.x && releasePosR.y < soldierPos.y){
@@ -86,7 +106,7 @@ void Battlefield::mouseCallBack(GLFWwindow* window, int button, int action, int 
         }
     }
     /*
-    for(auto & soldier : soldiers) {
+    for(auto & soldier : playerSoldiers) {
         if (soldier->getCollider().intersect(glm::vec3(0, 0, Const::CAMERA_DIST), rayDir)) {
             if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
                 selectedSoldiers.emplace_back(soldier);
@@ -101,9 +121,5 @@ void Battlefield::mouseCallBack(GLFWwindow* window, int button, int action, int 
     }
     */
 }
-
-
-
-
 
 

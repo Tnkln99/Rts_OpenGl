@@ -43,7 +43,17 @@ void Renderer::loadMesh() {
 
 void Renderer::forwardRender(Battlefield & bf) {
     shader.use();
-    for(auto & soldier : bf.getSoldiers()){
+    for(auto & soldier : bf.getPlayerSoldiers()){
+        shader.setMatrix4("projection", Const::PROJ_MATRIX);
+        shader.setMatrix4("view", Const::VIEW_MATRIX);
+        shader.setMatrix4("transform", soldier->getTransformable().getMoveMatrix());
+
+        shader.setVector4f("soldier_color", soldier->getColor());
+
+        drawMesh();
+    }
+
+    for(auto & soldier : bf.getEnemySoldiers()){
         shader.setMatrix4("projection", Const::PROJ_MATRIX);
         shader.setMatrix4("view", Const::VIEW_MATRIX);
         shader.setMatrix4("transform", soldier->getTransformable().getMoveMatrix());

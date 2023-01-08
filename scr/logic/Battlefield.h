@@ -3,7 +3,8 @@
 
 
 #include "GLFW/glfw3.h"
-#include "Soldier.h"
+#include "PlayerSoldier.h"
+#include "EnemySoldier.h"
 #include <glm/gtc/matrix_transform.hpp>
 
 #include <vector>
@@ -13,8 +14,11 @@
 
 class Battlefield {
 private:
-    std::vector<Soldier*> soldiers;
-    std::vector<Soldier*> selectedSoldiers;
+    std::vector<PlayerSoldier*> playerSoldiers;
+    std::vector<PlayerSoldier*> selectedSoldiers;
+
+    // todo when enemy playerSoldiers are added dont forget to render them
+    std::vector<EnemySoldier*> enemySoldiers;
 
     glm::vec3 pressedPosL;
     glm::vec3 pressedPosR;
@@ -22,7 +26,8 @@ public:
     ~Battlefield();
     void load(GLFWwindow *window);
 
-    const std::vector<Soldier*> & getSoldiers();
+    const std::vector<PlayerSoldier*> & getPlayerSoldiers();
+    const std::vector<EnemySoldier*> & getEnemySoldiers();
 
     void update(GLFWwindow *window, float dt);
 
