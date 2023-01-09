@@ -8,9 +8,14 @@
 
 class Soldier {
 private:
+    bool canAttack = true;
     float speed = 15;
     glm::vec4 color;
+
+    float canAttackTimer;
 protected:
+    int life = 20;
+
     CollisionBox collisionBox;
 
     const int unitPlaceHold = 2;
@@ -24,10 +29,15 @@ public:
     CollisionBox & getCollider();
     const glm::vec4 & getColor();
     [[nodiscard]] float getSpeed() const;
+    [[nodiscard]] bool getCanAttack() const;
+    int getLife() const;
+
+    void getHit();
 
     [[nodiscard]] int getUnitPlaceHold() const;
 
     void setColor(glm::vec4 color);
+    void setCanAttack(bool canAttack);
 
     virtual void update(float dt);
 };

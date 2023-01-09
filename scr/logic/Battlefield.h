@@ -38,7 +38,6 @@ private:
     std::vector<PlayerSoldier*> playerSoldiers;
     std::vector<PlayerSoldier*> selectedSoldiers;
 
-    // todo when enemy playerSoldiers are added dont forget to render them
     std::vector<EnemySoldier*> enemySoldiers;
 
     glm::vec3 pressedPosL;
@@ -49,6 +48,9 @@ public:
 
     const std::vector<PlayerSoldier*> & getPlayerSoldiers();
     const std::vector<EnemySoldier*> & getEnemySoldiers();
+
+    // like a collider check looks if two soldiers are in a fight range if so makes the necessary arrangement
+    void fight(Soldier * soldier1, Soldier * soldier2);
 
     void update(GLFWwindow *window, float dt);
 

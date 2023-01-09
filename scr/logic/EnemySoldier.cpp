@@ -28,10 +28,11 @@ void EnemySoldier::wonder(float dt) {
 }
 
 void EnemySoldier::update(float dt) {
+    Soldier::update(dt);
     float currTime = glfwGetTime();
     if(currTime - wonderingDirChangeTime > 0.5f){
         changeDirection();
         wonderingDirChangeTime = currTime;
     }
-    wonder(dt);
+    //wonder(dt);
 }

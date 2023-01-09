@@ -8,10 +8,10 @@ void Battlefield::load(GLFWwindow *window) {
         playerSoldiers.emplace_back(new PlayerSoldier(-60, offset, 0));
         offset -= 4;
     }
-
+    offset = 20;
     for(int i = 0; i < 10;i++){
-        enemySoldiers.emplace_back(new EnemySoldier(70, -37, 0));
-        offset -= 6;
+        enemySoldiers.emplace_back(new EnemySoldier(60, offset, 0));
+        offset -= 4;
     }
 
     glfwSetWindowUserPointer( window, this );
@@ -46,6 +46,36 @@ void Battlefield::update(GLFWwindow * window, float dt) {
     }
     for(auto & soldier : enemySoldiers){
         soldier->update(dt);
+    }
+
+
+    for(auto & playerSoldier : playerSoldiers){
+        for(auto & enemySoldier : enemySoldiers){
+            fight(playerSoldier, enemySoldier);
+        }
+    }
+}
+
+void Battlefield::fight(Soldier *soldier1, Soldier *soldier2) {
+    float distance = glm::distance(soldier1->getTransformable().getPosition(), soldier2->getTransformable().getPosition());
+    if(distance > Const::UNIT_ATTACK_RANGE){return;}
+    if(soldier1->getCanAttack()){
+        soldier2->getHit();
+        soldier1->setCanAttack(false);
+    }
+    if(soldier2->getCanAttack()){
+        soldier1->getHit();
+        soldier2->setCanAttack(false);
+    }
+    if(soldier1->getLife()<=0){
+        playerSoldiers.erase(std::remove(playerSoldiers.begin(), playerSoldiers.end(), soldier1),
+                               playerSoldiers.end());
+        //selectedSoldiers.erase(std::remove(playerSoldiers.begin(), playerSoldiers.end(), soldier1),
+        //                     selectedSoldiers.end());
+    }
+    if(soldier2->getLife()<=0){
+        enemySoldiers.erase(std::remove(enemySoldiers.begin(), enemySoldiers.end(), soldier2),
+                             enemySoldiers.end());
     }
 }
 

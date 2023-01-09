@@ -50,6 +50,7 @@ void PlayerSoldier::moveTowarsTarget(float dt) {
 }
 
 void PlayerSoldier::update(float dt) {
+    Soldier::update(dt);
     moveTowarsTarget(dt);
 }
 
