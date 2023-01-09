@@ -3,9 +3,12 @@
 
 #include "components/Transformable.h"
 #include "components/CollisionBox.h"
+#include <vector>
+
+
 class Soldier {
 private:
-    float speed = 20;
+    float speed = 15;
     glm::vec4 color;
 protected:
     CollisionBox collisionBox;
@@ -22,11 +25,11 @@ public:
     const glm::vec4 & getColor();
     [[nodiscard]] float getSpeed() const;
 
-    [[maybe_unused]] [[nodiscard]] int getUnitPlaceHold() const;
+    [[nodiscard]] int getUnitPlaceHold() const;
 
     void setColor(glm::vec4 color);
 
-    virtual void update(float dt) = 0;
+    virtual void update(float dt);
 };
 
 

@@ -9,6 +9,8 @@ public:
 
     static const glm::mat4 PROJ_MATRIX;
     static const glm::mat4 VIEW_MATRIX;
+
+    static const float UNIT_ATTACK_RANGE;
 };
 
 

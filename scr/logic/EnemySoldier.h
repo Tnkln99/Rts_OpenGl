@@ -15,6 +15,8 @@ private:
 
     State state = State::wondering;
     float wonderingDirChangeTime;
+
+    bool dead = false;
 public:
     EnemySoldier(float x, float y, float z);
 

@@ -8,10 +8,10 @@ void Battlefield::load(GLFWwindow *window) {
         playerSoldiers.emplace_back(new PlayerSoldier(-60, offset, 0));
         offset -= 4;
     }
-    offset = 20;
+
     for(int i = 0; i < 10;i++){
-        enemySoldiers.emplace_back(new EnemySoldier(60, offset, 0));
-        offset -= 4;
+        enemySoldiers.emplace_back(new EnemySoldier(70, -37, 0));
+        offset -= 6;
     }
 
     glfwSetWindowUserPointer( window, this );
@@ -25,6 +25,9 @@ void Battlefield::load(GLFWwindow *window) {
 
 Battlefield::~Battlefield() {
     for(auto & soldier : playerSoldiers){
+        delete soldier;
+    }
+    for(auto & soldier : enemySoldiers){
         delete soldier;
     }
 }
@@ -41,9 +44,9 @@ void Battlefield::update(GLFWwindow * window, float dt) {
     for(auto & soldier : playerSoldiers){
         soldier->update(dt);
     }
-    //for(auto & soldier : enemySoldiers){
-    //    soldier->update(dt);
-    //}
+    for(auto & soldier : enemySoldiers){
+        soldier->update(dt);
+    }
 }
 
 void Battlefield::mouseCallBack(GLFWwindow* window, int button, int action, int mods ) {
@@ -51,6 +54,7 @@ void Battlefield::mouseCallBack(GLFWwindow* window, int button, int action, int 
     glfwGetCursorPos(window, &mouseX, &mouseY);
 
     glm::vec3 rayDir = CameraUtils::getCameraRay(window, mouseX, mouseY);
+    glm::vec3  mouseWorldPos = CameraUtils::ScreenToWorldMousePos(window, rayDir);
 
     int index = 0;
     for (auto & selectedSoldier : selectedSoldiers) {
@@ -58,7 +62,14 @@ void Battlefield::mouseCallBack(GLFWwindow* window, int button, int action, int 
         int selectedSoldierIndex = index;
         index++;
         if(button == GLFW_MOUSE_BUTTON_MIDDLE && action == GLFW_PRESS){
-            selectedSoldier->setTarget(CameraUtils::ScreenToWorldMousePos(window,rayDir), selectedSoldierIndex, unitsAlongSide);
+            EnemySoldier * selectedEnemy = Helper::findClosestEnemyInRange(mouseWorldPos, enemySoldiers);
+            if(selectedEnemy != nullptr){
+                selectedSoldier->setEnemyTarget(selectedEnemy);
+            }
+            else{
+                selectedSoldier->setEnemyTarget(nullptr);
+                selectedSoldier->setMoveTarget(mouseWorldPos, selectedSoldierIndex, unitsAlongSide);
+            }
         }
     }
 

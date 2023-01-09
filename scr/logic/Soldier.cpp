@@ -32,3 +32,7 @@ CollisionBox & Soldier::getCollider() {
 void Soldier::setColor(glm::vec4 color) {
     this->color = color;
 }
+
+void Soldier::update(float dt) {
+
+}
