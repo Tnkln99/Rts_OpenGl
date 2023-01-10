@@ -24,14 +24,12 @@ private:
             float nearestEnemyDist = Const::UNIT_ATTACK_RANGE;
             EnemySoldier * foundEnemy = nullptr;
             for(auto & enemy : enemies){
-                enemy->setColor(glm::vec4(1,0,0,1));
                 float distance = glm::distance(enemy->getTransformable().getPosition(), mousePos);
                 if(distance <= nearestEnemyDist){
                     foundEnemy = enemy;
                     nearestEnemyDist = distance;
                 }
             }
-            if(foundEnemy!= nullptr){foundEnemy->setColor(glm::vec4(0.5,0.5,0.5,1));}
             return foundEnemy;
         }
     };

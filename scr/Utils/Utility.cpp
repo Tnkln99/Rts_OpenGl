@@ -1,9 +1,11 @@
-#include "CameraUtils.h"
+#include "Utility.h"
 #include "Const.h"
 
+#include <random>
 
 
-glm::vec3 CameraUtils::getCameraRay(GLFWwindow*window, double mouse_x, double mouse_y) {
+
+glm::vec3 Utility::getCameraRay(GLFWwindow*window, double mouse_x, double mouse_y) {
     int width, height;
     glfwGetFramebufferSize(window, &width, &height);
 
@@ -23,7 +25,7 @@ glm::vec3 CameraUtils::getCameraRay(GLFWwindow*window, double mouse_x, double mo
     return ray_wor;
 }
 
-glm::vec3 CameraUtils::ScreenToWorldMousePos(GLFWwindow *window, glm::vec3 rayDir) {
+glm::vec3 Utility::ScreenToWorldMousePos(GLFWwindow *window, glm::vec3 rayDir) {
     glm::vec3 rayOrigin(0,0,Const::CAMERA_DIST);
     glm::vec3 planeOrigin(0,0,0);
     glm::vec3 planeNormal(0,0,1);
@@ -31,5 +33,22 @@ glm::vec3 CameraUtils::ScreenToWorldMousePos(GLFWwindow *window, glm::vec3 rayDi
     float t = glm::dot(planeOrigin-rayOrigin, planeNormal) / glm::dot(rayDir,planeNormal);
 
     return rayOrigin + t*rayDir;
+}
+
+glm::vec3 Utility::generateRandomOffsetForPosition(int min, int max) {
+    typedef std::mt19937 rng_type;
+    std::uniform_int_distribution<rng_type::result_type> udist(min, max);
+
+    rng_type rng;
+
+    rng_type::result_type const seedval = rand(); // get this from somewhere
+    rng.seed(seedval);
+
+    rng_type::result_type random_number1 = udist(rng);
+    rng_type::result_type random_number2 = udist(rng);
+
+    glm::vec3 res{random_number1, random_number2,0};
+
+    return res;
 }
 

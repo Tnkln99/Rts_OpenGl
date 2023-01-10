@@ -10,6 +10,7 @@ Soldier::Soldier(float x, float y, float z) {
     collisionBox.setBounds(maxInit,minInit);
 
     canAttackTimer = glfwGetTime();
+    colorChangeTimer = glfwGetTime();
 }
 
 const Transformable &Soldier::getTransformable() {
@@ -17,7 +18,7 @@ const Transformable &Soldier::getTransformable() {
 }
 
 const glm::vec4 &Soldier::getColor() {
-    return color;
+    return currentColor;
 }
 
 float Soldier::getSpeed() const {
@@ -37,7 +38,11 @@ bool Soldier::getCanAttack() const {
 }
 
 void Soldier::setColor(glm::vec4 color) {
-    this->color = color;
+    this->currentColor = color;
+}
+
+void Soldier::setBaseColor(glm::vec4 color) {
+    this->baseColor = color;
 }
 
 void Soldier::setCanAttack(bool canAttack) {
@@ -52,9 +57,16 @@ void Soldier::update(float dt) {
             canAttackTimer = currTime;
         }
     }
+
+    if(currTime - colorChangeTimer > 2.0f){
+        setColor(baseColor);
+        colorChangeTimer = currTime;
+    }
 }
 
 void Soldier::getHit() {
+    glm::vec4 hitColor = glm::vec4(baseColor.x-0.2f, baseColor.y-0.2f, baseColor.z-0.2f,1);
+    setColor(hitColor);
     life--;
 }
 

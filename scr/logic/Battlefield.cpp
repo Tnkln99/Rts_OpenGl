@@ -1,5 +1,5 @@
 #include "Battlefield.h"
-#include "../Utils/CameraUtils.h"
+#include "../Utils/Utility.h"
 
 
 void Battlefield::load(GLFWwindow *window) {
@@ -10,7 +10,7 @@ void Battlefield::load(GLFWwindow *window) {
     }
     //offset = 20;
     for(int i = 0; i < 10;i++){
-        enemySoldiers.emplace_back(new EnemySoldier(60, -50, 0));
+        enemySoldiers.emplace_back(new EnemySoldier(60, -30, 0));
         //offset -= 4;
     }
 
@@ -36,7 +36,7 @@ const std::vector<PlayerSoldier*> &Battlefield::getPlayerSoldiers() {
     return playerSoldiers;
 }
 
-const std::vector<EnemySoldier *> &Battlefield::getEnemySoldiers() {
+const std::vector<EnemySoldier*> &Battlefield::getEnemySoldiers() {
     return enemySoldiers;
 }
 
@@ -54,14 +54,21 @@ void Battlefield::update(GLFWwindow * window, float dt) {
             fight(playerSoldier, enemySoldier);
         }
     }
+
+    if(playerSoldiers.empty()){
+        for(auto & enemySoldier : enemySoldiers){
+            enemySoldier->setState(State::wondering);
+        }
+    }
 }
 
 void Battlefield::fight(PlayerSoldier *pSoldier, EnemySoldier *eSoldier) {
     float distance = glm::distance(pSoldier->getTransformable().getPosition(), eSoldier->getTransformable().getPosition());
-
     // in here we simulate the fight if they are close enough
     if(distance < Const::UNIT_ATTACK_RANGE)
     {
+        eSoldier->setState(State::attacking);
+        eSoldier->setPlayerTarget(nullptr);
         if(pSoldier->getCanAttack())
         {
             eSoldier->getHit();
@@ -84,9 +91,14 @@ void Battlefield::fight(PlayerSoldier *pSoldier, EnemySoldier *eSoldier) {
     }
 
     // to give AI's the closest player unit
-    if (distance < Const::ENEMY_UNIT_DETECTION_RANGE)
+    else if (distance < Const::ENEMY_UNIT_DETECTION_RANGE)
     {
+        eSoldier->setState(State::chasing);
+        eSoldier->setPlayerTarget(pSoldier);
+    }
 
+    else{
+        eSoldier->setState(State::wondering);
     }
 }
 
@@ -94,8 +106,8 @@ void Battlefield::mouseCallBack(GLFWwindow* window, int button, int action, int 
     double mouseX, mouseY;
     glfwGetCursorPos(window, &mouseX, &mouseY);
 
-    glm::vec3 rayDir = CameraUtils::getCameraRay(window, mouseX, mouseY);
-    glm::vec3  mouseWorldPos = CameraUtils::ScreenToWorldMousePos(window, rayDir);
+    glm::vec3 rayDir = Utility::getCameraRay(window, mouseX, mouseY);
+    glm::vec3  mouseWorldPos = Utility::ScreenToWorldMousePos(window, rayDir);
 
     int index = 0;
     for (auto & selectedSoldier : selectedSoldiers) {
@@ -116,29 +128,30 @@ void Battlefield::mouseCallBack(GLFWwindow* window, int button, int action, int 
 
     glm::vec3 releasePosL = pressedPosL;
     if(button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS){
-        pressedPosL = CameraUtils::ScreenToWorldMousePos(window,rayDir);
+        pressedPosL = Utility::ScreenToWorldMousePos(window, rayDir);
         releasePosL = pressedPosL;
 
         pressedPosR = glm::vec3(0);
     }
     if(button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE){
-        releasePosL = CameraUtils::ScreenToWorldMousePos(window,rayDir);
+        releasePosL = Utility::ScreenToWorldMousePos(window, rayDir);
         for (auto & selectedSoldier : selectedSoldiers) {
             selectedSoldier->setColor(glm::vec4(1));
+            selectedSoldier->setBaseColor(glm::vec4(1));
         }
         selectedSoldiers.clear();
     }
 
     glm::vec3 releasePosR = pressedPosR;
     if(button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS){
-        pressedPosR = CameraUtils::ScreenToWorldMousePos(window, rayDir);
+        pressedPosR = Utility::ScreenToWorldMousePos(window, rayDir);
         releasePosR = pressedPosR;
 
         pressedPosL = glm::vec3(0);
         releasePosL = pressedPosL;
     }
     if(button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_RELEASE){
-        releasePosR = CameraUtils::ScreenToWorldMousePos(window,rayDir);
+        releasePosR = Utility::ScreenToWorldMousePos(window, rayDir);
     }
 
     for (auto & soldier : playerSoldiers){
@@ -147,7 +160,8 @@ void Battlefield::mouseCallBack(GLFWwindow* window, int button, int action, int 
             auto it = find(selectedSoldiers.begin(), selectedSoldiers.end(), soldier);
             if (it == selectedSoldiers.end()) {
                 selectedSoldiers.emplace_back(soldier);
-                soldier->setColor(glm::vec4(0));
+                soldier->setColor(glm::vec4(0.5));
+                soldier->setBaseColor(glm::vec4(0.5));
             }
         }
 
@@ -155,6 +169,7 @@ void Battlefield::mouseCallBack(GLFWwindow* window, int button, int action, int 
             selectedSoldiers.erase(std::remove(selectedSoldiers.begin(), selectedSoldiers.end(), soldier),
                                     selectedSoldiers.end());
             soldier->setColor(glm::vec4(1));
+            soldier->setBaseColor(glm::vec4(1));
         }
     }
     /*

@@ -114,7 +114,7 @@ GLFWwindow *Window::getPointer() const {
 }
 
 void Window::setBackgroundColor(float r, float b, float g, float t) {
-    // Specify the color of the background
+    // Specify the currentColor of the background
     glClearColor(r, b, g, t);
 }
 
