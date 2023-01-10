@@ -8,10 +8,10 @@ void Battlefield::load(GLFWwindow *window) {
         playerSoldiers.emplace_back(new PlayerSoldier(-60, offset, 0));
         offset -= 4;
     }
-    offset = 20;
+    //offset = 20;
     for(int i = 0; i < 10;i++){
-        enemySoldiers.emplace_back(new EnemySoldier(60, offset, 0));
-        offset -= 4;
+        enemySoldiers.emplace_back(new EnemySoldier(60, -50, 0));
+        //offset -= 4;
     }
 
     glfwSetWindowUserPointer( window, this );
@@ -41,11 +41,11 @@ const std::vector<EnemySoldier *> &Battlefield::getEnemySoldiers() {
 }
 
 void Battlefield::update(GLFWwindow * window, float dt) {
-    for(auto & soldier : playerSoldiers){
-        soldier->update(dt);
+    for(auto & playerSoldier : playerSoldiers){
+        playerSoldier->update(dt);
     }
-    for(auto & soldier : enemySoldiers){
-        soldier->update(dt);
+    for(auto & enemySoldier : enemySoldiers){
+        enemySoldier->update(dt);
     }
 
 
@@ -56,26 +56,37 @@ void Battlefield::update(GLFWwindow * window, float dt) {
     }
 }
 
-void Battlefield::fight(Soldier *soldier1, Soldier *soldier2) {
-    float distance = glm::distance(soldier1->getTransformable().getPosition(), soldier2->getTransformable().getPosition());
-    if(distance > Const::UNIT_ATTACK_RANGE){return;}
-    if(soldier1->getCanAttack()){
-        soldier2->getHit();
-        soldier1->setCanAttack(false);
+void Battlefield::fight(PlayerSoldier *pSoldier, EnemySoldier *eSoldier) {
+    float distance = glm::distance(pSoldier->getTransformable().getPosition(), eSoldier->getTransformable().getPosition());
+
+    // in here we simulate the fight if they are close enough
+    if(distance < Const::UNIT_ATTACK_RANGE)
+    {
+        if(pSoldier->getCanAttack())
+        {
+            eSoldier->getHit();
+            pSoldier->setCanAttack(false);
+        }
+        if(eSoldier->getCanAttack())
+        {
+            pSoldier->getHit();
+            eSoldier->setCanAttack(false);
+        }
+
+        if(pSoldier->getLife()<=0){
+            playerSoldiers.erase(std::remove(playerSoldiers.begin(), playerSoldiers.end(), pSoldier),
+                                 playerSoldiers.end());
+        }
+        if(eSoldier->getLife()<=0){
+            enemySoldiers.erase(std::remove(enemySoldiers.begin(), enemySoldiers.end(), eSoldier),
+                                enemySoldiers.end());
+        }
     }
-    if(soldier2->getCanAttack()){
-        soldier1->getHit();
-        soldier2->setCanAttack(false);
-    }
-    if(soldier1->getLife()<=0){
-        playerSoldiers.erase(std::remove(playerSoldiers.begin(), playerSoldiers.end(), soldier1),
-                               playerSoldiers.end());
-        //selectedSoldiers.erase(std::remove(playerSoldiers.begin(), playerSoldiers.end(), soldier1),
-        //                     selectedSoldiers.end());
-    }
-    if(soldier2->getLife()<=0){
-        enemySoldiers.erase(std::remove(enemySoldiers.begin(), enemySoldiers.end(), soldier2),
-                             enemySoldiers.end());
+
+    // to give AI's the closest player unit
+    if (distance < Const::ENEMY_UNIT_DETECTION_RANGE)
+    {
+
     }
 }
 

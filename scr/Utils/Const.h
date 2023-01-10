@@ -11,6 +11,7 @@ public:
     static const glm::mat4 VIEW_MATRIX;
 
     static const float UNIT_ATTACK_RANGE;
+    static const float ENEMY_UNIT_DETECTION_RANGE;
 };
 
 

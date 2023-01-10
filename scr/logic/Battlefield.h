@@ -19,7 +19,7 @@ private:
     class Helper{
     private:
     public:
-        // finds the closest enemy nearest to mouse click in UNIT_ATTACK_RANGE
+        // finds the closest enemy nearest to mouse click in PLAYER_UNIT_ATTACK_RANGE
         static EnemySoldier * findClosestEnemyInRange(glm::vec3 mousePos, const std::vector<EnemySoldier*>  & enemies){
             float nearestEnemyDist = Const::UNIT_ATTACK_RANGE;
             EnemySoldier * foundEnemy = nullptr;
@@ -50,7 +50,7 @@ public:
     const std::vector<EnemySoldier*> & getEnemySoldiers();
 
     // like a collider check looks if two soldiers are in a fight range if so makes the necessary arrangement
-    void fight(Soldier * soldier1, Soldier * soldier2);
+    void fight(PlayerSoldier * soldier1, EnemySoldier * soldier2);
 
     void update(GLFWwindow *window, float dt);
 

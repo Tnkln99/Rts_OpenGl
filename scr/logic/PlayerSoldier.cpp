@@ -10,7 +10,7 @@ PlayerSoldier::PlayerSoldier(float x, float y, float z) : Soldier(x, y, z) {
 }
 
 void PlayerSoldier::setMoveTarget(glm::vec3 target, int formationPos, int formationDim) {
-    glm::vec3 randomOffSet = generateRandomOffsetForPosition();
+    glm::vec3 randomOffSet = generateRandomOffsetForPosition(0,unitPlaceHold);
 
     int colNum = formationPos % formationDim;
     int rowNum = floor(formationPos / formationDim);
@@ -24,6 +24,7 @@ void PlayerSoldier::setMoveTarget(glm::vec3 target, int formationPos, int format
 
 void PlayerSoldier::setEnemyTarget(EnemySoldier *enemyToChase) {
     this->enemyToChase = enemyToChase;
+    attackFormation = generateRandomOffsetForPosition(0,unitPlaceHold);
 }
 
 void PlayerSoldier::moveTowarsTarget(float dt) {
@@ -35,8 +36,9 @@ void PlayerSoldier::moveTowarsTarget(float dt) {
         transform.setPosition(transform.getPosition() + vectorToTarget * (Soldier::getSpeed() * dt));
     }
     else{
-        glm::vec3 randomOffSet = generateRandomOffsetForPosition();
-        glm::vec3 targetPos = enemyToChase->getTransformable().getPosition()+randomOffSet;
+        glm::vec3 targetPos{0};
+        targetPos.x = enemyToChase->getTransformable().getPosition().x + attackFormation.x;
+        targetPos.y = enemyToChase->getTransformable().getPosition().y + attackFormation.y;
         glm::vec3 vectorToTarget = targetPos - transform.getPosition();
         float distance = glm::distance(targetPos, transform.getPosition());
         distance == 0? distance = 0.00001 : distance = distance;
@@ -49,14 +51,9 @@ void PlayerSoldier::moveTowarsTarget(float dt) {
     collisionBox.setBounds(maxInit,minInit);
 }
 
-void PlayerSoldier::update(float dt) {
-    Soldier::update(dt);
-    moveTowarsTarget(dt);
-}
-
-glm::vec3 PlayerSoldier::generateRandomOffsetForPosition() {
+glm::vec3 PlayerSoldier::generateRandomOffsetForPosition(int min, int max) {
     typedef std::mt19937 rng_type;
-    std::uniform_int_distribution<rng_type::result_type> udist(0, unitPlaceHold);
+    std::uniform_int_distribution<rng_type::result_type> udist(min, max);
 
     rng_type rng;
 
@@ -69,4 +66,9 @@ glm::vec3 PlayerSoldier::generateRandomOffsetForPosition() {
     glm::vec3 res{random_number1, random_number2,0};
 
     return res;
+}
+
+void PlayerSoldier::update(float dt) {
+    Soldier::update(dt);
+    moveTowarsTarget(dt);
 }

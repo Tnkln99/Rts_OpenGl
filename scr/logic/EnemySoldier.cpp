@@ -34,5 +34,5 @@ void EnemySoldier::update(float dt) {
         changeDirection();
         wonderingDirChangeTime = currTime;
     }
-    //wonder(dt);
+    wonder(dt);
 }
