@@ -17,7 +17,7 @@ void Window::load() {
     windowWidth = 1920;
     windowHeight = 1080;
 
-    window = glfwCreateWindow(windowWidth, windowHeight, "RTS_3D", glfwGetPrimaryMonitor(), NULL);
+    window = glfwCreateWindow(windowWidth, windowHeight, "RTS_3D", NULL, NULL);
 
     // Error check if the window fails to create
     if (window == NULL)

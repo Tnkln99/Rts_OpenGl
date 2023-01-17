@@ -10,11 +10,17 @@
 class Renderer {
 private:
     Shader shader;
-    Mesh mesh = Mesh('c');
+    Shader selectionArea;
+    Mesh mesh = Mesh('i');
+
+    unsigned int selectionAreaVAO;
+    std::vector<glm::vec3> selectionAreaVertices;
+    std::vector<GLuint> selectionAreaIndices;
 public:
     void loadRenderer(int windowWidth, int windowHeight);
 
     void loadMesh();
+    void loadSelectionArea();
 
     void forwardRender(Battlefield & bf);
 

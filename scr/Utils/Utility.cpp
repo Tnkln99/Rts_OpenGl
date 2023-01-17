@@ -1,5 +1,5 @@
 #include "Utility.h"
-#include "Const.h"
+#include "../logic/components/Camera.h"
 
 #include <random>
 
@@ -16,17 +16,17 @@ glm::vec3 Utility::getCameraRay(GLFWwindow*window, double mouse_x, double mouse_
 
     vec4 ray_clip = vec4(vec2(ray_nds.x, ray_nds.y), -1.0, 1.0);
 
-    vec4 ray_eye = inverse(Const::PROJ_MATRIX) * ray_clip;
+    vec4 ray_eye = inverse(Camera::PROJ_MATRIX) * ray_clip;
     ray_eye = vec4(vec2(ray_eye.x,ray_eye.y), -1.0, 0.0);
 
-    vec3 ray_wor = vec3(inverse(Const::VIEW_MATRIX) * ray_eye);
+    vec3 ray_wor = vec3(inverse(Camera::VIEW_MATRIX) * ray_eye);
     ray_wor = normalize(ray_wor);
 
     return ray_wor;
 }
 
 glm::vec3 Utility::ScreenToWorldMousePos(GLFWwindow *window, glm::vec3 rayDir) {
-    glm::vec3 rayOrigin(0,0,Const::CAMERA_DIST);
+    glm::vec3 rayOrigin = Camera::CAMERA_POS;
     glm::vec3 planeOrigin(0,0,0);
     glm::vec3 planeNormal(0,0,1);
 

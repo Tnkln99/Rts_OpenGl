@@ -24,6 +24,8 @@ public:
     void setPosition(float x, float y, float z);
     void setPosition(glm::vec3 position);
 
+    void scale(float x, float y, float z);
+
     void computeDirection(float yaw, float pitch);
 };
 

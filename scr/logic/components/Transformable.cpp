@@ -41,6 +41,11 @@ void Transformable::setPosition(glm::vec3 position){
     mvMatrix = glm::translate(glm::mat4(1), glm::vec3(this->position.x,this->position.y,this->position.z));
 }
 
+void Transformable::scale(float x, float y, float z) {
+    mvMatrix = glm::scale(mvMatrix, glm::vec3(x, y, z));
+}
+
+
 void Transformable::computeDirection(float yaw, float pitch){
     if(pitch > 89.0f)
         pitch = 89.0f;
@@ -53,3 +58,4 @@ void Transformable::computeDirection(float yaw, float pitch){
     tmp.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
     direction = glm::normalize(tmp);
 }
+

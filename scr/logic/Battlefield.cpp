@@ -4,14 +4,18 @@
 
 void Battlefield::load(GLFWwindow *window) {
     int offset = 20;
-    for(int i = 0; i < 10;i++){
+    for(int i = 0; i < 1;i++){
         playerSoldiers.emplace_back(new PlayerSoldier(-60, offset, 0));
         offset -= 4;
     }
-    //offset = 20;
-    for(int i = 0; i < 10;i++){
+    for(int i = 0; i < 0;i++){
         enemySoldiers.emplace_back(new EnemySoldier(60, -30, 0));
-        //offset -= 4;
+    }
+
+    offset = 20;
+    for(int i = 0; i < 10;i++){
+        Walls.emplace_back(new Wall(0, offset, 0));
+        offset --;
     }
 
     glfwSetWindowUserPointer( window, this );
@@ -40,9 +44,38 @@ const std::vector<EnemySoldier*> &Battlefield::getEnemySoldiers() {
     return enemySoldiers;
 }
 
+const std::vector<Wall *> &Battlefield::getWalls() {
+    return Walls;
+}
+
 void Battlefield::update(GLFWwindow * window, float dt) {
+    camera.update(window,dt);
+    double mouseX, mouseY;
+    glfwGetCursorPos(window, &mouseX, &mouseY);
+
+    glm::vec3 rayDir = Utility::getCameraRay(window, mouseX, mouseY);
+    glm::vec3 mouseWorldPos = Utility::ScreenToWorldMousePos(window, rayDir);
+
+    if(selectionArea.getIfMousePressed()){
+        float scaleX = glm::distance(mouseWorldPos.x , pressedPosL.x);
+        float scaleY = glm::distance(mouseWorldPos.y , pressedPosL.y);
+
+        //std::cout<<scaleX<<" : "<<scaleY<<std::endl;
+
+        selectionArea.transform.setPosition(mouseWorldPos.x, mouseWorldPos.y, 0.0f);
+        selectionArea.transform.scale(scaleX,scaleY,1);
+    }
+
+
+
     for(auto & playerSoldier : playerSoldiers){
         playerSoldier->update(dt);
+        //std::cout<<round(playerSoldier->getTransformable().getPosition().x)<< " : "<<round(playerSoldier->getTransformable().getPosition().y)<<std::endl;
+        for(auto & wall : Walls){
+            if(round(playerSoldier->getTransformable().getPosition().x) == wall->getTransformable().getPosition().x && round(playerSoldier->getTransformable().getPosition().y) == wall->getTransformable().getPosition().y){
+                std::cout<<"on wall"<<std::endl;
+            }
+        }
     }
     for(auto & enemySoldier : enemySoldiers){
         enemySoldier->update(dt);
@@ -97,7 +130,8 @@ void Battlefield::fight(PlayerSoldier *pSoldier, EnemySoldier *eSoldier) {
         eSoldier->setPlayerTarget(pSoldier);
     }
 
-    else{
+    else
+    {
         eSoldier->setState(State::wondering);
     }
 }
@@ -107,7 +141,7 @@ void Battlefield::mouseCallBack(GLFWwindow* window, int button, int action, int 
     glfwGetCursorPos(window, &mouseX, &mouseY);
 
     glm::vec3 rayDir = Utility::getCameraRay(window, mouseX, mouseY);
-    glm::vec3  mouseWorldPos = Utility::ScreenToWorldMousePos(window, rayDir);
+    glm::vec3 mouseWorldPos = Utility::ScreenToWorldMousePos(window, rayDir);
 
     int index = 0;
     for (auto & selectedSoldier : selectedSoldiers) {
@@ -132,7 +166,11 @@ void Battlefield::mouseCallBack(GLFWwindow* window, int button, int action, int 
         releasePosL = pressedPosL;
 
         pressedPosR = glm::vec3(0);
+        selectionArea.setMousePressed(true);
     }
+
+
+
     if(button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE){
         releasePosL = Utility::ScreenToWorldMousePos(window, rayDir);
         for (auto & selectedSoldier : selectedSoldiers) {
@@ -140,6 +178,8 @@ void Battlefield::mouseCallBack(GLFWwindow* window, int button, int action, int 
             selectedSoldier->setBaseColor(glm::vec4(1));
         }
         selectedSoldiers.clear();
+        selectionArea.clear();
+        selectionArea.setMousePressed(false);
     }
 
     glm::vec3 releasePosR = pressedPosR;
@@ -156,7 +196,9 @@ void Battlefield::mouseCallBack(GLFWwindow* window, int button, int action, int 
 
     for (auto & soldier : playerSoldiers){
         auto soldierPos = soldier->getTransformable().getPosition();
-        if(pressedPosL.x < soldierPos.x && pressedPosL.y > soldierPos.y && releasePosL.x > soldierPos.x && releasePosL.y < soldierPos.y){
+        float distancePressedAndReleaseX = std::abs(pressedPosL.x - releasePosL.x);
+        float distancePressedAndReleaseY = std::abs(pressedPosL.y - releasePosL.y);
+        if(pressedPosL.x < soldierPos.x && pressedPosL.y > soldierPos.y && releasePosL.x + distancePressedAndReleaseX > soldierPos.x && releasePosL.y - distancePressedAndReleaseY < soldierPos.y){
             auto it = find(selectedSoldiers.begin(), selectedSoldiers.end(), soldier);
             if (it == selectedSoldiers.end()) {
                 selectedSoldiers.emplace_back(soldier);
