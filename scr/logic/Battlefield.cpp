@@ -1,22 +1,21 @@
 #include "Battlefield.h"
 #include "../Utils/Utility.h"
+#include <fstream>
 
 
 void Battlefield::load(GLFWwindow *window) {
     int offset = 20;
-    for(int i = 0; i < 1;i++){
+    for(int i = 0; i < 20;i++){
         playerSoldiers.emplace_back(new PlayerSoldier(-60, offset, 0));
-        offset -= 4;
+        offset -= 2;
     }
-    for(int i = 0; i < 0;i++){
+    for(int i = 0; i < 20;i++){
         enemySoldiers.emplace_back(new EnemySoldier(60, -30, 0));
     }
 
-    offset = 20;
-    for(int i = 0; i < 10;i++){
-        Walls.emplace_back(new Wall(0, offset, 0));
-        offset --;
-    }
+    addWalls("../map.txt");
+
+    //grid.printGrid();
 
     glfwSetWindowUserPointer( window, this );
 
@@ -25,7 +24,32 @@ void Battlefield::load(GLFWwindow *window) {
         Battlefield* battlefield = static_cast<Battlefield*>( glfwGetWindowUserPointer( window ) );
         battlefield->mouseCallBack(window, button, action, mods);
     } );
+
+    //grid.printGrid();
 }
+
+void Battlefield::addWalls(std::string map) {
+    std::ifstream myfile;
+    myfile.open(map);
+    string res;
+    if ( myfile.is_open() ) {
+        int j = 0;
+        while ((myfile.good())){
+            myfile >> res;
+            for (int i = 0; i < res.size();i++)
+            {
+                if(res[i]=='0'){
+                    walls.push_back(new Wall(i-50, 50-j, 0.0f));
+                    grid.putWall(glm::vec3(i-50, 50-j, 0.0f));
+                }
+            }
+            j++;
+            //cout<<endl;
+        }
+
+    }
+}
+
 
 Battlefield::~Battlefield() {
     for(auto & soldier : playerSoldiers){
@@ -45,7 +69,7 @@ const std::vector<EnemySoldier*> &Battlefield::getEnemySoldiers() {
 }
 
 const std::vector<Wall *> &Battlefield::getWalls() {
-    return Walls;
+    return walls;
 }
 
 void Battlefield::update(GLFWwindow * window, float dt) {
@@ -69,16 +93,17 @@ void Battlefield::update(GLFWwindow * window, float dt) {
 
 
     for(auto & playerSoldier : playerSoldiers){
-        playerSoldier->update(dt);
-        //std::cout<<round(playerSoldier->getTransformable().getPosition().x)<< " : "<<round(playerSoldier->getTransformable().getPosition().y)<<std::endl;
-        for(auto & wall : Walls){
+        //Utility::convertCoordinatesToIndex(playerSoldier->getTransformable().getPosition(),100);
+        //std::cout<< round(playerSoldier->getTransformable().getPosition().x) << " : " << round(playerSoldier->getTransformable().getPosition().y) <<std::endl;
+        playerSoldier->update(dt, grid);
+        for(auto & wall : walls){
             if(round(playerSoldier->getTransformable().getPosition().x) == wall->getTransformable().getPosition().x && round(playerSoldier->getTransformable().getPosition().y) == wall->getTransformable().getPosition().y){
-                std::cout<<"on wall"<<std::endl;
+                //std::cout<<"on wall"<<std::endl;
             }
         }
     }
     for(auto & enemySoldier : enemySoldiers){
-        enemySoldier->update(dt);
+        enemySoldier->update(dt, grid);
     }
 
 
@@ -230,5 +255,4 @@ void Battlefield::mouseCallBack(GLFWwindow* window, int button, int action, int 
     }
     */
 }
-
 

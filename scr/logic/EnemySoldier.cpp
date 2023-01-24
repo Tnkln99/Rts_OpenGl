@@ -70,8 +70,8 @@ void EnemySoldier::moveToTarget(float dt) {
     transform.setPosition(transform.getPosition() + vectorToTarget * (Soldier::getSpeed() * dt));
 }
 
-void EnemySoldier::update(float dt) {
-    Soldier::update(dt);
+void EnemySoldier::update(float dt, const Grid & grid) {
+    Soldier::update(dt, grid);
     //std::cout<<to_string(state)<<std::endl;
     switch(this->state){
         case State::wondering:

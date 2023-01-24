@@ -49,7 +49,7 @@ void Soldier::setCanAttack(bool canAttack) {
     this->canAttack = canAttack;
 }
 
-void Soldier::update(float dt) {
+void Soldier::update(float dt, const Grid & grid) {
     float currTime = glfwGetTime();
     if(!canAttack){
         if(currTime - canAttackTimer > 1.0f){

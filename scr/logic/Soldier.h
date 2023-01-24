@@ -3,9 +3,10 @@
 
 #include "components/Transformable.h"
 #include "components/CollisionBox.h"
+#include "components/Grid.h"
 #include <vector>
 
-
+using namespace std;
 class Soldier {
 private:
     bool canAttack = true;
@@ -43,7 +44,7 @@ public:
     void setBaseColor(glm::vec4 color);
     void setCanAttack(bool canAttack);
 
-    virtual void update(float dt);
+    virtual void update(float dt, const Grid & grid);
 };
 
 

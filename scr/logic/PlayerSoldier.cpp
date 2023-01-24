@@ -29,7 +29,7 @@ void PlayerSoldier::setEnemyTarget(EnemySoldier *enemyToChase) {
     attackFormation = Utility::generateRandomOffsetForPosition(0,Const::UNIT_ATTACK_RANGE);
 }
 
-void PlayerSoldier::moveTowarsTarget(float dt) {
+void PlayerSoldier::moveTowarsTarget(float dt, const Grid & grid) {
     if(enemyToChase == nullptr){
         glm::vec3 vectorToTarget = posTarget - transform.getPosition();
         float distance = glm::distance(posTarget, transform.getPosition());
@@ -53,7 +53,7 @@ void PlayerSoldier::moveTowarsTarget(float dt) {
     collisionBox.setBounds(maxInit,minInit);
 }
 
-void PlayerSoldier::update(float dt) {
-    Soldier::update(dt);
-    moveTowarsTarget(dt);
+void PlayerSoldier::update(float dt, const Grid & grid) {
+    Soldier::update(dt, grid);
+    moveTowarsTarget(dt, grid);
 }

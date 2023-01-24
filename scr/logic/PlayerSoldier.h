@@ -14,9 +14,9 @@ public:
     void setMoveTarget(glm::vec3 target, int formationPos, int formationDim);
     void setEnemyTarget(EnemySoldier * enemyToChase);
 
-    void moveTowarsTarget(float dt);
+    void moveTowarsTarget(float dt,const Grid & grid);
 
-    void update(float dt) override;
+    void update(float dt, const Grid & grid) override;
 };
 
 

@@ -52,3 +52,11 @@ glm::vec3 Utility::generateRandomOffsetForPosition(int min, int max) {
     return res;
 }
 
+int Utility::convertCoordinatesToIndex(glm::vec3 pos, int gridSize) {
+    int x = round(pos.x) + (gridSize/2);
+    int y = (gridSize/2) - round(pos.y);
+
+    //std::cout << x << " : "<< y << " : "<< x * gridSize + y<<std::endl;
+    return x * gridSize + y;
+}
+

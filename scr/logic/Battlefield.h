@@ -6,6 +6,7 @@
 #include "PlayerSoldier.h"
 #include "EnemySoldier.h"
 #include "Wall.h"
+#include "components/Grid.h"
 #include <glm/gtc/matrix_transform.hpp>
 #include "components/SelectionArea.h"
 #include <vector>
@@ -35,7 +36,9 @@ private:
             return foundEnemy;
         }
     };
-    std::vector<Wall*> Walls;
+    Grid grid;
+
+    std::vector<Wall*> walls;
 
     std::vector<PlayerSoldier*> playerSoldiers;
     std::vector<PlayerSoldier*> selectedSoldiers;
@@ -46,6 +49,8 @@ private:
     glm::vec3 pressedPosR;
 
     Camera camera;
+
+    void addWalls(std::string map);
 public:
     SelectionArea selectionArea;
     ~Battlefield();

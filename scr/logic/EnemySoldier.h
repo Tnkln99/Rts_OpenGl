@@ -35,7 +35,7 @@ public:
     void attack(float dt);
     void moveToTarget(float dt);
 
-    void update(float dt) override;
+    void update(float dt, const Grid & grid) override;
 };
 
 

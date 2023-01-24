@@ -1,27 +1,27 @@
-23-01-17 16:07:07 INFO : 	program 3 GL_VALIDATE_STATUS = 1
-23-01-17 16:07:07 INFO : 	-----------------------------
-23-01-17 16:07:07 INFO : 	Shader programme 3 info:
-23-01-17 16:07:07 INFO : 	GL_LINK_STATUS = 1
-23-01-17 16:07:07 INFO : 	GL_ATTACHED_SHADERS = 2
-23-01-17 16:07:07 INFO : 	GL_ACTIVE_ATTRIBUTES = 1
-23-01-17 16:07:07 INFO : 	  0) type:vec3 name:aPos location:0
-23-01-17 16:07:07 INFO : 	GL_ACTIVE_UNIFORMS = 4
-23-01-17 16:07:07 INFO : 	  0) type:mat4 name:projection location:0
-23-01-17 16:07:07 INFO : 	  1) type:mat4 name:view location:1
-23-01-17 16:07:07 INFO : 	  2) type:mat4 name:transform location:5
-23-01-17 16:07:07 INFO : 	  3) type:vec4 name:soldier_color location:9
-23-01-17 16:07:07 INFO : 	program info log for GL index3
-23-01-17 16:07:07 INFO : 	
-23-01-17 16:07:07 INFO : 	program 6 GL_VALIDATE_STATUS = 1
-23-01-17 16:07:07 INFO : 	-----------------------------
-23-01-17 16:07:07 INFO : 	Shader programme 6 info:
-23-01-17 16:07:07 INFO : 	GL_LINK_STATUS = 1
-23-01-17 16:07:07 INFO : 	GL_ATTACHED_SHADERS = 2
-23-01-17 16:07:07 INFO : 	GL_ACTIVE_ATTRIBUTES = 1
-23-01-17 16:07:07 INFO : 	  0) type:vec3 name:aPos location:0
-23-01-17 16:07:07 INFO : 	GL_ACTIVE_UNIFORMS = 3
-23-01-17 16:07:07 INFO : 	  0) type:mat4 name:projection location:0
-23-01-17 16:07:07 INFO : 	  1) type:mat4 name:view location:1
-23-01-17 16:07:07 INFO : 	  2) type:mat4 name:transform location:5
-23-01-17 16:07:07 INFO : 	program info log for GL index6
-23-01-17 16:07:07 INFO : 	
+23-01-24 21:25:04 INFO : 	program 3 GL_VALIDATE_STATUS = 1
+23-01-24 21:25:04 INFO : 	-----------------------------
+23-01-24 21:25:04 INFO : 	Shader programme 3 info:
+23-01-24 21:25:04 INFO : 	GL_LINK_STATUS = 1
+23-01-24 21:25:04 INFO : 	GL_ATTACHED_SHADERS = 2
+23-01-24 21:25:04 INFO : 	GL_ACTIVE_ATTRIBUTES = 1
+23-01-24 21:25:04 INFO : 	  0) type:vec3 name:aPos location:0
+23-01-24 21:25:04 INFO : 	GL_ACTIVE_UNIFORMS = 4
+23-01-24 21:25:04 INFO : 	  0) type:mat4 name:projection location:0
+23-01-24 21:25:04 INFO : 	  1) type:mat4 name:view location:1
+23-01-24 21:25:04 INFO : 	  2) type:mat4 name:transform location:5
+23-01-24 21:25:04 INFO : 	  3) type:vec4 name:soldier_color location:9
+23-01-24 21:25:04 INFO : 	program info log for GL index3
+23-01-24 21:25:04 INFO : 	
+23-01-24 21:25:04 INFO : 	program 6 GL_VALIDATE_STATUS = 1
+23-01-24 21:25:04 INFO : 	-----------------------------
+23-01-24 21:25:04 INFO : 	Shader programme 6 info:
+23-01-24 21:25:04 INFO : 	GL_LINK_STATUS = 1
+23-01-24 21:25:04 INFO : 	GL_ATTACHED_SHADERS = 2
+23-01-24 21:25:04 INFO : 	GL_ACTIVE_ATTRIBUTES = 1
+23-01-24 21:25:04 INFO : 	  0) type:vec3 name:aPos location:0
+23-01-24 21:25:04 INFO : 	GL_ACTIVE_UNIFORMS = 3
+23-01-24 21:25:04 INFO : 	  0) type:mat4 name:projection location:0
+23-01-24 21:25:04 INFO : 	  1) type:mat4 name:view location:1
+23-01-24 21:25:04 INFO : 	  2) type:mat4 name:transform location:5
+23-01-24 21:25:04 INFO : 	program info log for GL index6
+23-01-24 21:25:04 INFO : 	
